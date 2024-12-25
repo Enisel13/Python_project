@@ -27,3 +27,8 @@ python manage.py startapp store
 2. Added in ecom/ecom/urls.py
     - from django.urls import path, include
     - path('', include(store.urls)), 
+
+##############################################################################
+
+-python manage.py  migrate 
+    #database stuff that needs to be migrated into the project
