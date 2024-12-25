@@ -32,3 +32,12 @@ python manage.py startapp store
 
 -python manage.py  migrate 
     #database stuff that needs to be migrated into the project
+
+
+##############################################################################
+-python manage.py makemigrations
+    Migrations for 'store':
+        + Create model Category
+        + Create model Customer
+        + Create model Product
+        + Create model Order
