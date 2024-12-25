@@ -1,0 +1,29 @@
+mkdir ecom
+python -m venv virt
+
+1. to activate python env run:
+    source virt/bin/activate
+
+2. to deactivate, run: 
+    deactivate
+
+##############################################################################
+
+django-admin startproject ecom
+
+# directory is created ecom
+# then cd ecom and run  
+
+# to create an app inside the project: 
+python manage.py startapp store 
+
+| ecom
+    | ecom
+    | store 
+
+##############################################################################
+
+1. Added in ecom/ecom/settings.py in INSTALLED_APPS store
+2. Added in ecom/ecom/urls.py
+    - from django.urls import path, include
+    - path('', include(store.urls)), 
