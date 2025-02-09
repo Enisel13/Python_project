@@ -41,3 +41,12 @@ python manage.py startapp store
         + Create model Customer
         + Create model Product
         + Create model Order
+
+##############################################################################
+Всеки път когато направя някаква промяна като например сега добавих sale_price and is_sale аз трябва 
+да изпълня командата python3 manage.py makemigrations, за да се отразят промените и в база данните:
+    ~ Change Meta options on category
+    + Add field is_sale to product
+    + Add field sale_price to product
+
+След това правим python3 manage.py migrate - this will push that migration into the database
