@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Product
+from .models import Product, Category
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -7,6 +7,21 @@ from django.contrib.auth.forms import UserCreationForm
 from .forms import SignUpForm #we are saying "Take it from forms.py" and allow us to use it in our views.py"
 from django import forms
 
+def category(request, foo):
+    #Replace Hyphens with Spaces
+    foo = foo.replace('-', ' ')
+    #Grab the category from the url
+    #if the category do not exist we want to throw up an error
+    try:
+        #Look up the category
+        category = Category.objects.get(name=foo)
+        #Get all of the products in that cantegory
+        products = Product.objects.filter(category=category)
+        return render(request, 'category.html', {'products':products, 'category':category})
+
+    except:
+        messages.success(request, ("That category does not exist!"))
+        return redirect('home')
 
 def product(request, pk):
     product = Product.objects.get(id=pk)#this will look up in product model and it will get the specific product number
