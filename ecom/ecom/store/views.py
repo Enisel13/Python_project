@@ -8,6 +8,11 @@ from .forms import SignUpForm #we are saying "Take it from forms.py" and allow u
 from django import forms
 
 
+def product(request, pk):
+    product = Product.objects.get(id=pk)#this will look up in product model and it will get the specific product number
+    return render(request, 'product.html', {'product': product})
+
+
 def home(request):
     products = Product.objects.all()
     return render(request, 'index.html', {'products': products})
