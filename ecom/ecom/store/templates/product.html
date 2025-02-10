@@ -34,10 +34,13 @@
                 {{ product.sale_price }}лв
 
               {% else %}
-              {{ product.price }}лв
+                {{ product.price }}лв
+                <br/>ID: {{ product.id }}
+
               {% endif %}
               <br/><br/>
             <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
+            <button type= "button" value="{{ product.id }}" class="btn btn-secondary" id="add-cart">Add to cart</button>
 
             </center>
             </div>
@@ -56,6 +59,37 @@
 <br/><br/>
 <br/><br/>
 <br/><br/>
+
+
+<script>
+//Check if button pressed
+$(document).on('click', '#add-cart', function(e){
+    e.preventDefault();
+    //ajax is something that allows us to send a stuff to the back end of our server without refreshing the web page
+    $.ajax({
+        type: 'POST',
+        url: '{% url "cart_add" %}',
+        data: {
+            product_id: $('#add-cart').val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post'
+        },
+
+        success: function(json){
+            console.log(json)
+        },
+
+        error: function(xhr, errmsg, err){
+
+        }
+        
+    });
+})
+
+
+
+</script>
+
 
 {% endblock %}     
 
