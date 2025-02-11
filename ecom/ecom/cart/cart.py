@@ -25,3 +25,5 @@ class Cart():
 
         self.session.modified = True
         
+    def __len__(self):
+        return len(self.cart)#come through cart count up how many things are in it and then just return that

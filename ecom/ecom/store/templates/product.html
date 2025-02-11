@@ -35,12 +35,12 @@
 
               {% else %}
                 {{ product.price }}лв
-                <br/>ID: {{ product.id }}
+                
 
               {% endif %}
               <br/><br/>
             <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
-            <button type= "button" value="{{ product.id }}" class="btn btn-secondary" id="add-cart">Add to cart</button>
+            <button type="button" value="{{ product.id }}" class="btn btn-secondary" id="add-cart">Add to cart</button>
 
             </center>
             </div>
@@ -64,7 +64,7 @@
 <script>
 //Check if button pressed
 $(document).on('click', '#add-cart', function(e){
-    e.preventDefault();
+    e.preventDefault(); //Make sure if the button is pressed
     //ajax is something that allows us to send a stuff to the back end of our server without refreshing the web page
     $.ajax({
         type: 'POST',
@@ -76,7 +76,9 @@ $(document).on('click', '#add-cart', function(e){
         },
 
         success: function(json){
-            console.log(json)
+            //console.log(json)
+            document.getElementById("cart_quantity").textContent = json.qty
+
         },
 
         error: function(xhr, errmsg, err){
