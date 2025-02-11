@@ -1,3 +1,4 @@
+from store.models import Product
 
 class Cart():
     #request - anytime a user goes to the website he is making a request to view that website 
@@ -27,3 +28,17 @@ class Cart():
         
     def __len__(self):
         return len(self.cart)#come through cart count up how many things are in it and then just return that
+
+    #Allows us to see what is in the cart 
+    def get_prods(self):
+        #Whenever we add something to the cart it`s adding the ID of that product
+        #So we can take that ID and use it to look up the product and see exactly what product is
+        #Get ids from cart
+        product_ids = self.cart.keys() #keys() because the product ID is pasted in a dictionary with the price (ID:price)
+
+        #Use ids to lookup products in database model
+        products = Product.objects.filter(id__in=product_ids) #всички id-та, които си намерил върни продуктите които отговарят
+
+        #Return those looked up products
+        return products
+
