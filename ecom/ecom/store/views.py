@@ -4,8 +4,28 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .forms import SignUpForm #we are saying "Take it from forms.py" and allow us to use it in our views.py"
+from .forms import SignUpForm, UpdateUserForm #we are saying "Take it from forms.py" and allow us to use it in our views.py"
 from django import forms
+
+def update_user(request):
+    if request.user.is_authenticated:
+        #when a user is logged in we can find out what user that is by calling request.user.id
+        current_user = User.objects.get(id=request.user.id) #getting the user from the model from the database
+        #instance=current_user - when someone goes to the web page  for the first time and click on the profile link to go to this page it will have his current information already in the form
+        user_form = UpdateUserForm(request.POST or None, instance=current_user)
+
+        if user_form.is_valid():
+            user_form.save() 
+
+            login(request, current_user)
+            messages.success(request, "User has been updated!")
+            return redirect('home')
+        
+        return render(request, "update_user.html", {'user_form':user_form})
+    #If they are not logged in
+    else:
+        messages.success(request, "You must be logged in!")
+        return redirect('home')
 
 def category_summary(request):
     #We need to grab all of our categories from our database model and then put them on the screen and turn them into URL
