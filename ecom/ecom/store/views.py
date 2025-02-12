@@ -7,6 +7,11 @@ from django.contrib.auth.forms import UserCreationForm
 from .forms import SignUpForm #we are saying "Take it from forms.py" and allow us to use it in our views.py"
 from django import forms
 
+def category_summary(request):
+    #We need to grab all of our categories from our database model and then put them on the screen and turn them into URL
+    categories = Category.objects.all() #this will grab everything from category model
+    return render(request, 'category_summary.html', {"categories":categories})
+
 def category(request, foo):
     #Replace Hyphens with Spaces
     foo = foo.replace('-', ' ')
