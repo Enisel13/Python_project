@@ -1,11 +1,29 @@
 from django.shortcuts import render, redirect
-from .models import Product, Category
+from .models import Product, Category, Profile #from models.py Profile
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm #we are saying "Take it from forms.py" and allow us to use it in our views.py"
+from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm #we are saying "Take it from forms.py" and allow us to use it in our views.py"
 from django import forms
+
+def update_info(request):
+    if request.user.is_authenticated:
+        #when a user is logged in we can find out what user that is by calling request.user.id
+        current_user = Profile.objects.get(user__id=request.user.id) #find the user profile that has a user ID of.. (number)
+        #instance=current_user - when someone goes to the web page  for the first time and click on the profile link to go to this page it will have his current information already in the form
+        form = UserInfoForm(request.POST or None, instance=current_user)
+
+        if form.is_valid():
+            form.save() 
+            messages.success(request, "Your info has been updated!")
+            return redirect('home')
+        else:
+            return render(request, "update_info.html", {'form':form})
+    #If they are not logged in
+    else:
+        messages.success(request, "You must be logged in!")
+        return redirect('home')
 
 def update_password(request):
     #Did they are logged in
@@ -123,8 +141,8 @@ def register_user(request):
             #log in user
             user = authenticate(username=username, password=password)
             login(request, user)
-            messages.success(request, ("You have registered successfully! Welcome!"))
-            return redirect('home')
+            messages.success(request, ("Username created, please fill out your user info below"))
+            return redirect('update_info')
         
         else:
             messages.success(request, ("There was a problem registering, please try again!"))
