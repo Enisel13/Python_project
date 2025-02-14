@@ -35,7 +35,7 @@ def update_info(request):
         #Get current user
         current_user = Profile.objects.get(user__id=request.user.id) #find the user profile that has a user ID of.. (number)
         #Get current user`s shipping info
-        shipping_user = ShippingAddress.objects.get(id=request.user.id)
+        shipping_user = ShippingAddress.objects.get(user__id=request.user.id)
         #instance=current_user - when someone goes to the web page  for the first time and click on the profile link to go to this page it will have his current information already in the form
         #Get original user form
         form = UserInfoForm(request.POST or None, instance=current_user)
