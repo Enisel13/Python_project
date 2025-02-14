@@ -7,6 +7,8 @@ from django.contrib.auth.forms import UserCreationForm
 from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm #we are saying "Take it from forms.py" and allow us to use it in our views.py"
 from django import forms
 from django.db.models import Q
+import json #JavaScript object notation kind of like python dictionary
+from cart.cart import Cart
 
 def search(request):
     #Determine if they filled out the form
@@ -134,6 +136,23 @@ def login_user(request):
         #now we need to check if the username and the password are correct
         if user is not None: #if the loggin is successful
             login(request, user) #this login function is this up here we imported
+
+            #Do some shopping cart stuff
+            current_user = Profile.objects.get(user__id=request.user.id)
+            #Get their saved cart from database
+            saved_cart = current_user.old_cart
+            #Convert database string to python dictionary
+            if saved_cart:
+                #Convert in dictionary using JSON
+                converted_cart = json.loads(saved_cart)
+                #Add the loaded dictionary to our session
+                #Get the cart
+                cart = Cart(request)
+                #Loop throught the cart and add the items from the database
+                for key, value in converted_cart.items():
+                    cart.db_add(product=key, quantity=value)
+
+
             messages.success(request, ("You have been logged in!"))
             return redirect('home')
 
