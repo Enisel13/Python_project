@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('store.urls')),
     path('cart/', include('cart.urls')), #added a reference to the new urls.py (cart)
-    
+    path('payment/', include('payment.urls')), #We need to connect the main urls.py with the new urls.py file 
+     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
