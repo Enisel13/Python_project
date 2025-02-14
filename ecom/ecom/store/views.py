@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm #we are saying "Take it from forms.py" and allow us to use it in our views.py"
+from payment.forms import ShippingForm
+from payment.models import ShippingAddress
 from django import forms
 from django.db.models import Q
 import json #JavaScript object notation kind of like python dictionary
@@ -30,16 +32,26 @@ def search(request):
 def update_info(request):
     if request.user.is_authenticated:
         #when a user is logged in we can find out what user that is by calling request.user.id
+        #Get current user
         current_user = Profile.objects.get(user__id=request.user.id) #find the user profile that has a user ID of.. (number)
+        #Get current user`s shipping info
+        shipping_user = ShippingAddress.objects.get(id=request.user.id)
         #instance=current_user - when someone goes to the web page  for the first time and click on the profile link to go to this page it will have his current information already in the form
+        #Get original user form
         form = UserInfoForm(request.POST or None, instance=current_user)
 
-        if form.is_valid():
+        #Get user`s shipping form
+        shipping_form = ShippingForm(request.POST or None, instance=shipping_user)
+
+        if form.is_valid() or shipping_form.is_valid():
+            #ave original form
             form.save() 
+            #Save shipping form
+            shipping_form.save()
             messages.success(request, "Your info has been updated!")
             return redirect('home')
         else:
-            return render(request, "update_info.html", {'form':form})
+            return render(request, "update_info.html", {'form':form, 'shipping_form':shipping_form})
     #If they are not logged in
     else:
         messages.success(request, "You must be logged in!")
