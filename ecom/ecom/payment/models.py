@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User #We need to associate the shipping address with a particular user so we need our user model
 from store.models import Product
+from django.db.models.signals import post_save
 
 #There we made a major change to our model we need to make a migration and push this into the database
 class ShippingAddress(models.Model):
@@ -21,6 +22,18 @@ class ShippingAddress(models.Model):
     def __str__(self):
         return f'Shipping address - {str(self.id)}'
     
+#Create a user Shipping address by default when user signs up for the first time 
+def create_shipping(sender, instance, created, **kwargs):
+    if created: #We check if the user is newly created
+        user_shipping = ShippingAddress(user=instance) #createing a new user that information will becom this instance it will get passed into our profile
+        user_shipping.save()
+
+#Automate the profile thing
+#post_save - this will allow us to send a signal to our models to save something
+#we call the function create_profile and the instance will be their current logged in instance
+#and ceated will be what this post connect thing sends
+post_save.connect(create_shipping, sender=User)
+     
 #Create order model
 class Order(models.Model):
     #Foreign key
